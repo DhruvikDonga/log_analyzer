@@ -1,0 +1,22 @@
+[package]
+name = "log_analyzer"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+# Using 'serde' with derive enabled
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Note: serde_yaml 0.9 is deprecated; consider serde_yml
+serde_yml = "0.0.12"
+
+# Ensure chrono and time don't conflict
+chrono = { version = "0.4", features = ["serde"] }
+time = { version = "0.3", features = ["serde", "formatting"] }
+
+clap = { version = "4.5", features = ["derive"] }
+tungstenite = "0.28.0"
+tokio = { version = "1.50.0", features = ["full"] }
+notify = "6.1"
+rust-embed = "8.11.0"

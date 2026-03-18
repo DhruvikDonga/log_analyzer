@@ -1,0 +1,8 @@
+{
+  "date_formats": [
+    { "name": "Common Log", "format": "[%d/%b/%Y:%H:%M:%S %z]" },
+    { "name": "JSON ISO",   "format": "%+" },
+    { "name": "Syslog",     "format": "%b %d %H:%M:%S" }
+  ],
+  "error_indicators": ["error", "404", "500", "panic", "critical", "failed"]
+}

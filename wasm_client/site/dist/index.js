@@ -1,0 +1,176 @@
+/*
+ * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./index.js"
+/*!******************!*\
+  !*** ./index.js ***!
+  \******************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _pkg_wasm_client_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../pkg/wasm_client.js */ \"../pkg/wasm_client.js\");\n/* global uPlot */\n\n\nasync function run() {\n  await (0,_pkg_wasm_client_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"])();\n  (0,_pkg_wasm_client_js__WEBPACK_IMPORTED_MODULE_0__.start_log_stream)();\n\n  // uPlot state\n  const chartData = [[], [], []];\n\n  const opts = {\n    title: \"Log Traffic\",\n    width: 800,\n    height: 300,\n    scales: { x: { time: false } },\n    series: [\n      {},\n      {\n        label: \"Total Logs\",\n        stroke: \"#6366f1\",\n        width: 2,\n      },\n      {\n        label: \"Errors\",\n        stroke: \"#ef4444\",\n        width: 2,\n        fill: \"rgba(239, 68, 68, 0.1)\",\n      },\n    ],\n    axes: [\n      {\n        stroke: \"#9ca3af\",\n        grid: {\n          stroke: \"#374151\",\n          width: 1,\n        },\n      },\n      {\n        stroke: \"#9ca3af\",\n        grid: {\n          stroke: \"#374151\",\n          width: 1,\n        },\n      },\n    ],\n    series: [\n      {},\n      {\n        label: \"Total Logs\",\n        stroke: \"#6366f1\",\n        width: 2,\n      },\n      {\n        label: \"Errors\",\n        stroke: \"#ef4444\",\n        width: 2,\n        fill: \"rgba(239, 68, 68, 0.1)\",\n      },\n    ],\n  };\n\n  const uplot = new uPlot(\n    opts,\n    chartData,\n    document.getElementById(\"chart-container\"),\n  );\n\n  window.updateUPlot = (xArr, yTotal, yErrors) => {\n    if (!uplot) {\n      console.error(\"❌ uPlot instance is missing!\");\n      return;\n    }\n\n    try {\n      uplot.setData([xArr, yTotal, yErrors]);\n    } catch (e) {\n      console.error(\"❌ uPlot Draw Error:\", e);\n    }\n  };\n}\n\nrun();\n\n\n//# sourceURL=webpack:///./index.js?\n}");
+
+/***/ },
+
+/***/ "../pkg/wasm_client_bg.wasm"
+/*!**********************************!*\
+  !*** ../pkg/wasm_client_bg.wasm ***!
+  \**********************************/
+(module, __unused_webpack_exports, __webpack_require__) {
+
+eval("{module.exports = __webpack_require__.p + \"21c14d9dbb6b937dbe15.wasm\";\n\n//# sourceURL=webpack:///../pkg/wasm_client_bg.wasm?\n}");
+
+/***/ },
+
+/***/ "../pkg/wasm_client.js"
+/*!*****************************!*\
+  !*** ../pkg/wasm_client.js ***!
+  \*****************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ __wbg_init),\n/* harmony export */   greet_analyzer: () => (/* binding */ greet_analyzer),\n/* harmony export */   initSync: () => (/* binding */ initSync),\n/* harmony export */   start_log_stream: () => (/* binding */ start_log_stream)\n/* harmony export */ });\n/* @ts-self-types=\"./wasm_client.d.ts\" */\n\n/**\n * @param {string} name\n */\nfunction greet_analyzer(name) {\n    const ptr0 = passStringToWasm0(name, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);\n    const len0 = WASM_VECTOR_LEN;\n    wasm.greet_analyzer(ptr0, len0);\n}\n\nfunction start_log_stream() {\n    wasm.start_log_stream();\n}\n\nfunction __wbg_get_imports() {\n    const import0 = {\n        __proto__: null,\n        __wbg___wbindgen_debug_string_5398f5bb970e0daa: function(arg0, arg1) {\n            const ret = debugString(arg1);\n            const ptr1 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);\n            const len1 = WASM_VECTOR_LEN;\n            getDataViewMemory0().setInt32(arg0 + 4 * 1, len1, true);\n            getDataViewMemory0().setInt32(arg0 + 4 * 0, ptr1, true);\n        },\n        __wbg___wbindgen_is_function_3c846841762788c1: function(arg0) {\n            const ret = typeof(arg0) === 'function';\n            return ret;\n        },\n        __wbg___wbindgen_is_string_7ef6b97b02428fae: function(arg0) {\n            const ret = typeof(arg0) === 'string';\n            return ret;\n        },\n        __wbg___wbindgen_is_undefined_52709e72fb9f179c: function(arg0) {\n            const ret = arg0 === undefined;\n            return ret;\n        },\n        __wbg___wbindgen_string_get_395e606bd0ee4427: function(arg0, arg1) {\n            const obj = arg1;\n            const ret = typeof(obj) === 'string' ? obj : undefined;\n            var ptr1 = isLikeNone(ret) ? 0 : passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);\n            var len1 = WASM_VECTOR_LEN;\n            getDataViewMemory0().setInt32(arg0 + 4 * 1, len1, true);\n            getDataViewMemory0().setInt32(arg0 + 4 * 0, ptr1, true);\n        },\n        __wbg___wbindgen_throw_6ddd609b62940d55: function(arg0, arg1) {\n            throw new Error(getStringFromWasm0(arg0, arg1));\n        },\n        __wbg__wbg_cb_unref_6b5b6b8576d35cb1: function(arg0) {\n            arg0._wbg_cb_unref();\n        },\n        __wbg_addEventListener_2d985aa8a656f6dc: function() { return handleError(function (arg0, arg1, arg2, arg3) {\n            arg0.addEventListener(getStringFromWasm0(arg1, arg2), arg3);\n        }, arguments); },\n        __wbg_addEventListener_97281b0177d72360: function() { return handleError(function (arg0, arg1, arg2, arg3, arg4) {\n            arg0.addEventListener(getStringFromWasm0(arg1, arg2), arg3, arg4);\n        }, arguments); },\n        __wbg_alert_3cf7719a6f13f19e: function(arg0, arg1) {\n            alert(getStringFromWasm0(arg0, arg1));\n        },\n        __wbg_childElementCount_a81f286a82c79cd5: function(arg0) {\n            const ret = arg0.childElementCount;\n            return ret;\n        },\n        __wbg_clearTimeout_113b1cde814ec762: function(arg0) {\n            const ret = clearTimeout(arg0);\n            return ret;\n        },\n        __wbg_close_af26905c832a88cb: function() { return handleError(function (arg0) {\n            arg0.close();\n        }, arguments); },\n        __wbg_code_aea376e2d265a64f: function(arg0) {\n            const ret = arg0.code;\n            return ret;\n        },\n        __wbg_createElement_9b0aab265c549ded: function() { return handleError(function (arg0, arg1, arg2) {\n            const ret = arg0.createElement(getStringFromWasm0(arg1, arg2));\n            return ret;\n        }, arguments); },\n        __wbg_data_a3d9ff9cdd801002: function(arg0) {\n            const ret = arg0.data;\n            return ret;\n        },\n        __wbg_dispatchEvent_29145a50abb697bc: function() { return handleError(function (arg0, arg1) {\n            const ret = arg0.dispatchEvent(arg1);\n            return ret;\n        }, arguments); },\n        __wbg_document_c0320cd4183c6d9b: function(arg0) {\n            const ret = arg0.document;\n            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);\n        },\n        __wbg_getElementById_d1f25d287b19a833: function(arg0, arg1, arg2) {\n            const ret = arg0.getElementById(getStringFromWasm0(arg1, arg2));\n            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);\n        },\n        __wbg_instanceof_ArrayBuffer_101e2bf31071a9f6: function(arg0) {\n            let result;\n            try {\n                result = arg0 instanceof ArrayBuffer;\n            } catch (_) {\n                result = false;\n            }\n            const ret = result;\n            return ret;\n        },\n        __wbg_instanceof_Error_4691a5b466e32a80: function(arg0) {\n            let result;\n            try {\n                result = arg0 instanceof Error;\n            } catch (_) {\n                result = false;\n            }\n            const ret = result;\n            return ret;\n        },\n        __wbg_instanceof_Window_23e677d2c6843922: function(arg0) {\n            let result;\n            try {\n                result = arg0 instanceof Window;\n            } catch (_) {\n                result = false;\n            }\n            const ret = result;\n            return ret;\n        },\n        __wbg_lastElementChild_caf5eb7858bfec7c: function(arg0) {\n            const ret = arg0.lastElementChild;\n            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);\n        },\n        __wbg_length_ea16607d7b61445b: function(arg0) {\n            const ret = arg0.length;\n            return ret;\n        },\n        __wbg_log_524eedafa26daa59: function(arg0) {\n            console.log(arg0);\n        },\n        __wbg_message_00d63f20c41713dd: function(arg0) {\n            const ret = arg0.message;\n            return ret;\n        },\n        __wbg_name_ecf53d5e050a495d: function(arg0) {\n            const ret = arg0.name;\n            return ret;\n        },\n        __wbg_new_5f486cdf45a04d78: function(arg0) {\n            const ret = new Uint8Array(arg0);\n            return ret;\n        },\n        __wbg_new_a70fbab9066b301f: function() {\n            const ret = new Array();\n            return ret;\n        },\n        __wbg_new_ab79df5bd7c26067: function() {\n            const ret = new Object();\n            return ret;\n        },\n        __wbg_new_dd50bcc3f60ba434: function() { return handleError(function (arg0, arg1) {\n            const ret = new WebSocket(getStringFromWasm0(arg0, arg1));\n            return ret;\n        }, arguments); },\n        __wbg_new_with_event_init_dict_fb446c1d36e37046: function() { return handleError(function (arg0, arg1, arg2) {\n            const ret = new CloseEvent(getStringFromWasm0(arg0, arg1), arg2);\n            return ret;\n        }, arguments); },\n        __wbg_prepend_ebebf3d32ea17a06: function() { return handleError(function (arg0, arg1) {\n            arg0.prepend(arg1);\n        }, arguments); },\n        __wbg_prototypesetcall_d62e5099504357e6: function(arg0, arg1, arg2) {\n            Uint8Array.prototype.set.call(getArrayU8FromWasm0(arg0, arg1), arg2);\n        },\n        __wbg_queueMicrotask_0c399741342fb10f: function(arg0) {\n            const ret = arg0.queueMicrotask;\n            return ret;\n        },\n        __wbg_queueMicrotask_a082d78ce798393e: function(arg0) {\n            queueMicrotask(arg0);\n        },\n        __wbg_reason_cbcb9911796c4714: function(arg0, arg1) {\n            const ret = arg1.reason;\n            const ptr1 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);\n            const len1 = WASM_VECTOR_LEN;\n            getDataViewMemory0().setInt32(arg0 + 4 * 1, len1, true);\n            getDataViewMemory0().setInt32(arg0 + 4 * 0, ptr1, true);\n        },\n        __wbg_removeChild_dfd4207a6ece49c1: function() { return handleError(function (arg0, arg1) {\n            const ret = arg0.removeChild(arg1);\n            return ret;\n        }, arguments); },\n        __wbg_removeEventListener_d27694700fc0df8b: function() { return handleError(function (arg0, arg1, arg2, arg3) {\n            arg0.removeEventListener(getStringFromWasm0(arg1, arg2), arg3);\n        }, arguments); },\n        __wbg_resolve_ae8d83246e5bcc12: function(arg0) {\n            const ret = Promise.resolve(arg0);\n            return ret;\n        },\n        __wbg_setTimeout_ef24d2fc3ad97385: function() { return handleError(function (arg0, arg1) {\n            const ret = setTimeout(arg0, arg1);\n            return ret;\n        }, arguments); },\n        __wbg_set_282384002438957f: function(arg0, arg1, arg2) {\n            arg0[arg1 >>> 0] = arg2;\n        },\n        __wbg_set_binaryType_3dcf8281ec100a8f: function(arg0, arg1) {\n            arg0.binaryType = __wbindgen_enum_BinaryType[arg1];\n        },\n        __wbg_set_code_fd32f14824f6885a: function(arg0, arg1) {\n            arg0.code = arg1;\n        },\n        __wbg_set_innerHTML_97039584c4ab4c83: function(arg0, arg1, arg2) {\n            arg0.innerHTML = getStringFromWasm0(arg1, arg2);\n        },\n        __wbg_set_once_617be4b8bd597c38: function(arg0, arg1) {\n            arg0.once = arg1 !== 0;\n        },\n        __wbg_set_reason_b5edb0791e7766e3: function(arg0, arg1, arg2) {\n            arg0.reason = getStringFromWasm0(arg1, arg2);\n        },\n        __wbg_set_textContent_1e964492a2410e92: function(arg0, arg1, arg2) {\n            arg0.textContent = arg1 === 0 ? undefined : getStringFromWasm0(arg1, arg2);\n        },\n        __wbg_static_accessor_GLOBAL_8adb955bd33fac2f: function() {\n            const ret = typeof __webpack_require__.g === 'undefined' ? null : __webpack_require__.g;\n            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);\n        },\n        __wbg_static_accessor_GLOBAL_THIS_ad356e0db91c7913: function() {\n            const ret = typeof globalThis === 'undefined' ? null : globalThis;\n            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);\n        },\n        __wbg_static_accessor_SELF_f207c857566db248: function() {\n            const ret = typeof self === 'undefined' ? null : self;\n            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);\n        },\n        __wbg_static_accessor_WINDOW_bb9f1ba69d61b386: function() {\n            const ret = typeof window === 'undefined' ? null : window;\n            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);\n        },\n        __wbg_then_098abe61755d12f6: function(arg0, arg1) {\n            const ret = arg0.then(arg1);\n            return ret;\n        },\n        __wbg_toString_fca8b5e46235cfb4: function(arg0) {\n            const ret = arg0.toString();\n            return ret;\n        },\n        __wbg_updateUPlot_dd0b04a57fc90c8c: function(arg0, arg1, arg2) {\n            updateUPlot(arg0, arg1, arg2);\n        },\n        __wbg_wasClean_69f68dc4ed2d2cc7: function(arg0) {\n            const ret = arg0.wasClean;\n            return ret;\n        },\n        __wbindgen_cast_0000000000000001: function(arg0, arg1) {\n            // Cast intrinsic for `Closure(Closure { dtor_idx: 29, function: Function { arguments: [], shim_idx: 30, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.\n            const ret = makeMutClosure(arg0, arg1, wasm.wasm_bindgen__closure__destroy__h1d777f58efa450f0, wasm_bindgen__convert__closures_____invoke__h137241c6b2f09835);\n            return ret;\n        },\n        __wbindgen_cast_0000000000000002: function(arg0, arg1) {\n            // Cast intrinsic for `Closure(Closure { dtor_idx: 47, function: Function { arguments: [NamedExternref(\"CloseEvent\")], shim_idx: 48, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.\n            const ret = makeMutClosure(arg0, arg1, wasm.wasm_bindgen__closure__destroy__h546f0dd8fb5cc23c, wasm_bindgen__convert__closures_____invoke__h5c8fda9a5c0fa383);\n            return ret;\n        },\n        __wbindgen_cast_0000000000000003: function(arg0, arg1) {\n            // Cast intrinsic for `Closure(Closure { dtor_idx: 47, function: Function { arguments: [NamedExternref(\"Event\")], shim_idx: 48, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.\n            const ret = makeMutClosure(arg0, arg1, wasm.wasm_bindgen__closure__destroy__h546f0dd8fb5cc23c, wasm_bindgen__convert__closures_____invoke__h5c8fda9a5c0fa383_2);\n            return ret;\n        },\n        __wbindgen_cast_0000000000000004: function(arg0, arg1) {\n            // Cast intrinsic for `Closure(Closure { dtor_idx: 47, function: Function { arguments: [NamedExternref(\"MessageEvent\")], shim_idx: 48, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.\n            const ret = makeMutClosure(arg0, arg1, wasm.wasm_bindgen__closure__destroy__h546f0dd8fb5cc23c, wasm_bindgen__convert__closures_____invoke__h5c8fda9a5c0fa383_3);\n            return ret;\n        },\n        __wbindgen_cast_0000000000000005: function(arg0, arg1) {\n            // Cast intrinsic for `Closure(Closure { dtor_idx: 47, function: Function { arguments: [], shim_idx: 50, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.\n            const ret = makeMutClosure(arg0, arg1, wasm.wasm_bindgen__closure__destroy__h546f0dd8fb5cc23c, wasm_bindgen__convert__closures_____invoke__h3f212102f6ff686a);\n            return ret;\n        },\n        __wbindgen_cast_0000000000000006: function(arg0, arg1) {\n            // Cast intrinsic for `Closure(Closure { dtor_idx: 54, function: Function { arguments: [Externref], shim_idx: 55, ret: Result(Unit), inner_ret: Some(Result(Unit)) }, mutable: true }) -> Externref`.\n            const ret = makeMutClosure(arg0, arg1, wasm.wasm_bindgen__closure__destroy__h7426e2344d2edc46, wasm_bindgen__convert__closures_____invoke__h1502240e34c2001f);\n            return ret;\n        },\n        __wbindgen_cast_0000000000000007: function(arg0) {\n            // Cast intrinsic for `F64 -> Externref`.\n            const ret = arg0;\n            return ret;\n        },\n        __wbindgen_cast_0000000000000008: function(arg0, arg1) {\n            // Cast intrinsic for `Ref(String) -> Externref`.\n            const ret = getStringFromWasm0(arg0, arg1);\n            return ret;\n        },\n        __wbindgen_init_externref_table: function() {\n            const table = wasm.__wbindgen_externrefs;\n            const offset = table.grow(4);\n            table.set(0, undefined);\n            table.set(offset + 0, undefined);\n            table.set(offset + 1, null);\n            table.set(offset + 2, true);\n            table.set(offset + 3, false);\n        },\n    };\n    return {\n        __proto__: null,\n        \"./wasm_client_bg.js\": import0,\n    };\n}\n\nfunction wasm_bindgen__convert__closures_____invoke__h137241c6b2f09835(arg0, arg1) {\n    wasm.wasm_bindgen__convert__closures_____invoke__h137241c6b2f09835(arg0, arg1);\n}\n\nfunction wasm_bindgen__convert__closures_____invoke__h3f212102f6ff686a(arg0, arg1) {\n    wasm.wasm_bindgen__convert__closures_____invoke__h3f212102f6ff686a(arg0, arg1);\n}\n\nfunction wasm_bindgen__convert__closures_____invoke__h5c8fda9a5c0fa383(arg0, arg1, arg2) {\n    wasm.wasm_bindgen__convert__closures_____invoke__h5c8fda9a5c0fa383(arg0, arg1, arg2);\n}\n\nfunction wasm_bindgen__convert__closures_____invoke__h5c8fda9a5c0fa383_2(arg0, arg1, arg2) {\n    wasm.wasm_bindgen__convert__closures_____invoke__h5c8fda9a5c0fa383_2(arg0, arg1, arg2);\n}\n\nfunction wasm_bindgen__convert__closures_____invoke__h5c8fda9a5c0fa383_3(arg0, arg1, arg2) {\n    wasm.wasm_bindgen__convert__closures_____invoke__h5c8fda9a5c0fa383_3(arg0, arg1, arg2);\n}\n\nfunction wasm_bindgen__convert__closures_____invoke__h1502240e34c2001f(arg0, arg1, arg2) {\n    const ret = wasm.wasm_bindgen__convert__closures_____invoke__h1502240e34c2001f(arg0, arg1, arg2);\n    if (ret[1]) {\n        throw takeFromExternrefTable0(ret[0]);\n    }\n}\n\n\nconst __wbindgen_enum_BinaryType = [\"blob\", \"arraybuffer\"];\n\nfunction addToExternrefTable0(obj) {\n    const idx = wasm.__externref_table_alloc();\n    wasm.__wbindgen_externrefs.set(idx, obj);\n    return idx;\n}\n\nconst CLOSURE_DTORS = (typeof FinalizationRegistry === 'undefined')\n    ? { register: () => {}, unregister: () => {} }\n    : new FinalizationRegistry(state => state.dtor(state.a, state.b));\n\nfunction debugString(val) {\n    // primitive types\n    const type = typeof val;\n    if (type == 'number' || type == 'boolean' || val == null) {\n        return  `${val}`;\n    }\n    if (type == 'string') {\n        return `\"${val}\"`;\n    }\n    if (type == 'symbol') {\n        const description = val.description;\n        if (description == null) {\n            return 'Symbol';\n        } else {\n            return `Symbol(${description})`;\n        }\n    }\n    if (type == 'function') {\n        const name = val.name;\n        if (typeof name == 'string' && name.length > 0) {\n            return `Function(${name})`;\n        } else {\n            return 'Function';\n        }\n    }\n    // objects\n    if (Array.isArray(val)) {\n        const length = val.length;\n        let debug = '[';\n        if (length > 0) {\n            debug += debugString(val[0]);\n        }\n        for(let i = 1; i < length; i++) {\n            debug += ', ' + debugString(val[i]);\n        }\n        debug += ']';\n        return debug;\n    }\n    // Test for built-in\n    const builtInMatches = /\\[object ([^\\]]+)\\]/.exec(toString.call(val));\n    let className;\n    if (builtInMatches && builtInMatches.length > 1) {\n        className = builtInMatches[1];\n    } else {\n        // Failed to match the standard '[object ClassName]'\n        return toString.call(val);\n    }\n    if (className == 'Object') {\n        // we're a user defined class or Object\n        // JSON.stringify avoids problems with cycles, and is generally much\n        // easier than looping through ownProperties of `val`.\n        try {\n            return 'Object(' + JSON.stringify(val) + ')';\n        } catch (_) {\n            return 'Object';\n        }\n    }\n    // errors\n    if (val instanceof Error) {\n        return `${val.name}: ${val.message}\\n${val.stack}`;\n    }\n    // TODO we could test for more things here, like `Set`s and `Map`s.\n    return className;\n}\n\nfunction getArrayU8FromWasm0(ptr, len) {\n    ptr = ptr >>> 0;\n    return getUint8ArrayMemory0().subarray(ptr / 1, ptr / 1 + len);\n}\n\nlet cachedDataViewMemory0 = null;\nfunction getDataViewMemory0() {\n    if (cachedDataViewMemory0 === null || cachedDataViewMemory0.buffer.detached === true || (cachedDataViewMemory0.buffer.detached === undefined && cachedDataViewMemory0.buffer !== wasm.memory.buffer)) {\n        cachedDataViewMemory0 = new DataView(wasm.memory.buffer);\n    }\n    return cachedDataViewMemory0;\n}\n\nfunction getStringFromWasm0(ptr, len) {\n    ptr = ptr >>> 0;\n    return decodeText(ptr, len);\n}\n\nlet cachedUint8ArrayMemory0 = null;\nfunction getUint8ArrayMemory0() {\n    if (cachedUint8ArrayMemory0 === null || cachedUint8ArrayMemory0.byteLength === 0) {\n        cachedUint8ArrayMemory0 = new Uint8Array(wasm.memory.buffer);\n    }\n    return cachedUint8ArrayMemory0;\n}\n\nfunction handleError(f, args) {\n    try {\n        return f.apply(this, args);\n    } catch (e) {\n        const idx = addToExternrefTable0(e);\n        wasm.__wbindgen_exn_store(idx);\n    }\n}\n\nfunction isLikeNone(x) {\n    return x === undefined || x === null;\n}\n\nfunction makeMutClosure(arg0, arg1, dtor, f) {\n    const state = { a: arg0, b: arg1, cnt: 1, dtor };\n    const real = (...args) => {\n\n        // First up with a closure we increment the internal reference\n        // count. This ensures that the Rust closure environment won't\n        // be deallocated while we're invoking it.\n        state.cnt++;\n        const a = state.a;\n        state.a = 0;\n        try {\n            return f(a, state.b, ...args);\n        } finally {\n            state.a = a;\n            real._wbg_cb_unref();\n        }\n    };\n    real._wbg_cb_unref = () => {\n        if (--state.cnt === 0) {\n            state.dtor(state.a, state.b);\n            state.a = 0;\n            CLOSURE_DTORS.unregister(state);\n        }\n    };\n    CLOSURE_DTORS.register(real, state, state);\n    return real;\n}\n\nfunction passStringToWasm0(arg, malloc, realloc) {\n    if (realloc === undefined) {\n        const buf = cachedTextEncoder.encode(arg);\n        const ptr = malloc(buf.length, 1) >>> 0;\n        getUint8ArrayMemory0().subarray(ptr, ptr + buf.length).set(buf);\n        WASM_VECTOR_LEN = buf.length;\n        return ptr;\n    }\n\n    let len = arg.length;\n    let ptr = malloc(len, 1) >>> 0;\n\n    const mem = getUint8ArrayMemory0();\n\n    let offset = 0;\n\n    for (; offset < len; offset++) {\n        const code = arg.charCodeAt(offset);\n        if (code > 0x7F) break;\n        mem[ptr + offset] = code;\n    }\n    if (offset !== len) {\n        if (offset !== 0) {\n            arg = arg.slice(offset);\n        }\n        ptr = realloc(ptr, len, len = offset + arg.length * 3, 1) >>> 0;\n        const view = getUint8ArrayMemory0().subarray(ptr + offset, ptr + len);\n        const ret = cachedTextEncoder.encodeInto(arg, view);\n\n        offset += ret.written;\n        ptr = realloc(ptr, len, offset, 1) >>> 0;\n    }\n\n    WASM_VECTOR_LEN = offset;\n    return ptr;\n}\n\nfunction takeFromExternrefTable0(idx) {\n    const value = wasm.__wbindgen_externrefs.get(idx);\n    wasm.__externref_table_dealloc(idx);\n    return value;\n}\n\nlet cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });\ncachedTextDecoder.decode();\nconst MAX_SAFARI_DECODE_BYTES = 2146435072;\nlet numBytesDecoded = 0;\nfunction decodeText(ptr, len) {\n    numBytesDecoded += len;\n    if (numBytesDecoded >= MAX_SAFARI_DECODE_BYTES) {\n        cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });\n        cachedTextDecoder.decode();\n        numBytesDecoded = len;\n    }\n    return cachedTextDecoder.decode(getUint8ArrayMemory0().subarray(ptr, ptr + len));\n}\n\nconst cachedTextEncoder = new TextEncoder();\n\nif (!('encodeInto' in cachedTextEncoder)) {\n    cachedTextEncoder.encodeInto = function (arg, view) {\n        const buf = cachedTextEncoder.encode(arg);\n        view.set(buf);\n        return {\n            read: arg.length,\n            written: buf.length\n        };\n    };\n}\n\nlet WASM_VECTOR_LEN = 0;\n\nlet wasmModule, wasm;\nfunction __wbg_finalize_init(instance, module) {\n    wasm = instance.exports;\n    wasmModule = module;\n    cachedDataViewMemory0 = null;\n    cachedUint8ArrayMemory0 = null;\n    wasm.__wbindgen_start();\n    return wasm;\n}\n\nasync function __wbg_load(module, imports) {\n    if (typeof Response === 'function' && module instanceof Response) {\n        if (typeof WebAssembly.instantiateStreaming === 'function') {\n            try {\n                return await WebAssembly.instantiateStreaming(module, imports);\n            } catch (e) {\n                const validResponse = module.ok && expectedResponseType(module.type);\n\n                if (validResponse && module.headers.get('Content-Type') !== 'application/wasm') {\n                    console.warn(\"`WebAssembly.instantiateStreaming` failed because your server does not serve Wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\\n\", e);\n\n                } else { throw e; }\n            }\n        }\n\n        const bytes = await module.arrayBuffer();\n        return await WebAssembly.instantiate(bytes, imports);\n    } else {\n        const instance = await WebAssembly.instantiate(module, imports);\n\n        if (instance instanceof WebAssembly.Instance) {\n            return { instance, module };\n        } else {\n            return instance;\n        }\n    }\n\n    function expectedResponseType(type) {\n        switch (type) {\n            case 'basic': case 'cors': case 'default': return true;\n        }\n        return false;\n    }\n}\n\nfunction initSync(module) {\n    if (wasm !== undefined) return wasm;\n\n\n    if (module !== undefined) {\n        if (Object.getPrototypeOf(module) === Object.prototype) {\n            ({module} = module)\n        } else {\n            console.warn('using deprecated parameters for `initSync()`; pass a single object instead')\n        }\n    }\n\n    const imports = __wbg_get_imports();\n    if (!(module instanceof WebAssembly.Module)) {\n        module = new WebAssembly.Module(module);\n    }\n    const instance = new WebAssembly.Instance(module, imports);\n    return __wbg_finalize_init(instance, module);\n}\n\nasync function __wbg_init(module_or_path) {\n    if (wasm !== undefined) return wasm;\n\n\n    if (module_or_path !== undefined) {\n        if (Object.getPrototypeOf(module_or_path) === Object.prototype) {\n            ({module_or_path} = module_or_path)\n        } else {\n            console.warn('using deprecated parameters for the initialization function; pass a single object instead')\n        }\n    }\n\n    if (module_or_path === undefined) {\n        module_or_path = new URL(/* asset import */ __webpack_require__(/*! wasm_client_bg.wasm */ \"../pkg/wasm_client_bg.wasm\"), __webpack_require__.b);\n    }\n    const imports = __wbg_get_imports();\n\n    if (typeof module_or_path === 'string' || (typeof Request === 'function' && module_or_path instanceof Request) || (typeof URL === 'function' && module_or_path instanceof URL)) {\n        module_or_path = fetch(module_or_path);\n    }\n\n    const { instance, module } = await __wbg_load(await module_or_path, imports);\n\n    return __wbg_finalize_init(instance, module);\n}\n\n\n\n\n//# sourceURL=webpack:///../pkg/wasm_client.js?\n}");
+
+/***/ }
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/global */
+/******/ 	(() => {
+/******/ 		__webpack_require__.g = (function() {
+/******/ 			if (typeof globalThis === 'object') return globalThis;
+/******/ 			try {
+/******/ 				return this || new Function('return this')();
+/******/ 			} catch (e) {
+/******/ 				if (typeof window === 'object') return window;
+/******/ 			}
+/******/ 		})();
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	(() => {
+/******/ 		var scriptUrl;
+/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
+/******/ 		var document = __webpack_require__.g.document;
+/******/ 		if (!scriptUrl && document) {
+/******/ 			if (document.currentScript && document.currentScript.tagName.toUpperCase() === 'SCRIPT')
+/******/ 				scriptUrl = document.currentScript.src;
+/******/ 			if (!scriptUrl) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				if(scripts.length) {
+/******/ 					var i = scripts.length - 1;
+/******/ 					while (i > -1 && (!scriptUrl || !/^http(s?):/.test(scriptUrl))) scriptUrl = scripts[i--].src;
+/******/ 				}
+/******/ 			}
+/******/ 		}
+/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
+/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
+/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
+/******/ 		scriptUrl = scriptUrl.replace(/^blob:/, "").replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
+/******/ 		__webpack_require__.p = scriptUrl;
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		__webpack_require__.b = (typeof document !== 'undefined' && document.baseURI) || self.location.href;
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"main": 0
+/******/ 		};
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		// no on chunks loaded
+/******/ 		
+/******/ 		// no jsonp function
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module can't be inlined because the eval devtool is used.
+/******/ 	var __webpack_exports__ = __webpack_require__("./index.js");
+/******/ 	
+/******/ })()
+;

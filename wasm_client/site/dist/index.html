@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8" />
+        <title>Log Analyzer | Real-time Dashboard</title>
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/uplot/dist/uPlot.min.css"
+        />
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-black text-gray-100 font-sans min-h-screen">
+        <div class="max-w-6xl mx-auto p-6 space-y-6">
+            <div
+                class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-2xl"
+            >
+                <h2
+                    class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 px-2"
+                >
+                    Log Traffic Volume (Minute-by-Minute)
+                </h2>
+                <div
+                    id="chart-container"
+                    class="w-full flex justify-center bg-gray-950 rounded-lg overflow-hidden"
+                ></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div
+                    class="bg-gray-900 border border-gray-800 p-4 rounded-xl flex justify-between items-center"
+                >
+                    <span class="text-gray-400 text-sm uppercase font-semibold"
+                        >Total Logs</span
+                    >
+                    <span
+                        id="total-logs"
+                        class="text-2xl font-mono font-bold text-indigo-400"
+                        >0</span
+                    >
+                </div>
+                <div
+                    class="bg-gray-900 border border-gray-800 p-4 rounded-xl flex justify-between items-center"
+                >
+                    <span
+                        class="text-gray-400 text-sm uppercase font-semibold text-red-900"
+                        >Anomalies</span
+                    >
+                    <span
+                        id="error-count"
+                        class="text-2xl font-mono font-bold text-red-500"
+                        >0</span
+                    >
+                </div>
+            </div>
+
+            <div
+                class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-2xl"
+            >
+                <div
+                    class="bg-gray-800/50 px-4 py-2 border-b border-gray-800 flex justify-between items-center"
+                >
+                    <span class="text-xs font-bold text-gray-400 uppercase"
+                        >Live Console</span
+                    >
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="w-2 h-2 bg-green-500 rounded-full animate-pulse"
+                        ></div>
+                        <span class="text-[10px] text-gray-500 font-mono italic"
+                            >WS: CONNECTED</span
+                        >
+                    </div>
+                </div>
+
+                <div
+                    id="log-container"
+                    class="h-80 overflow-y-auto bg-black/40 p-4 font-mono text-sm space-y-1 scroll-smooth"
+                >
+                    <div class="text-gray-700 italic">
+                        Waiting for log synchronization...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://unpkg.com/uplot/dist/uPlot.iife.min.js"></script>
+        <script src="./index.js"></script>
+    </body>
+</html>

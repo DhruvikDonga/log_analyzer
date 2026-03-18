@@ -1,0 +1,3 @@
+files:
+  - "/home/dhruvik/log_analyzer/example_logs/access.log"
+  - "/home/dhruvik/log_analyzer/example_logs/service.log"
