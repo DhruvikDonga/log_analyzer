@@ -6,7 +6,8 @@ use std::thread;
 
 pub struct LogState {
     pub clients: Vec<tungstenite::WebSocket<std::net::TcpStream>>,
-    pub cache: VecDeque<String>,
+    pub log_cache: VecDeque<String>,
+    pub metric_cache: VecDeque<String>,
 }
 pub type SharedLogState = Arc<Mutex<LogState>>;
 
@@ -19,9 +20,13 @@ pub fn start_socket_server(clients: SharedLogState) {
             if let Ok(s) = stream {
                 if let Ok(mut ws) = tungstenite::accept(s) {
                     if let Ok(mut guard) = clients.lock() {
-                        for old_logs in &guard.cache {
+                        for old_logs in &guard.log_cache {
                             let _ = ws.send(Message::Text(old_logs.clone().into()));
                             //thread::sleep(std::time::Duration::from_secs(1));
+                        }
+
+                        for metric in &guard.metric_cache {
+                            let _ = ws.send(Message::Text(metric.clone().into()));
                         }
                         guard.clients.push(ws);
                     }

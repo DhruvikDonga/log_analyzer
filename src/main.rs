@@ -2,6 +2,7 @@ use clap::Parser;
 use serde::Deserialize;
 use serde_yml;
 use std::{fs, net::TcpListener, sync::Arc, thread};
+use sysinfo::System;
 mod etl;
 use etl::{etl, parser::LogConfig};
 use log_analyzer::ThreadPool;
@@ -12,6 +13,7 @@ use web::handle_connection;
 mod socket;
 use socket::{LogState, start_socket_server};
 
+mod sys_metrics;
 use std::sync::Mutex;
 
 use crate::socket::SharedLogState;
@@ -35,7 +37,8 @@ struct FilesYAMLConfig {
 fn main() {
     let clients: SharedLogState = Arc::new(Mutex::new(LogState {
         clients: Vec::new(),
-        cache: VecDeque::with_capacity(500),
+        log_cache: VecDeque::with_capacity(500),
+        metric_cache: VecDeque::with_capacity(500),
     }));
     let args = Args::parse();
     println!("Log Analyzer");
@@ -71,6 +74,11 @@ fn main() {
         }
     });
 
+    let metric_clients = Arc::clone(&clients);
+    let metric_handle = thread::spawn(move || {
+        sys_metrics::get_metrics(metric_clients);
+    });
+
     let web_handle = thread::spawn(move || {
         let listener = TcpListener::bind("127.0.0.1:7867").unwrap();
         let pool = ThreadPool::new(4);
@@ -84,5 +92,6 @@ fn main() {
 
     start_socket_server(Arc::clone(&clients));
     etl_handle.join().unwrap();
+    metric_handle.join().unwrap();
     web_handle.join().unwrap();
 }

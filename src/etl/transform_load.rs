@@ -64,9 +64,9 @@ fn analyze_groups(
             })
             .to_string();
             let mut client_guards = etl_socket_clients.lock().unwrap();
-            client_guards.cache.push_back(msg.clone());
-            if client_guards.cache.len() > 500 {
-                client_guards.cache.pop_front();
+            client_guards.log_cache.push_back(msg.clone());
+            if client_guards.log_cache.len() > 500 {
+                client_guards.log_cache.pop_front();
             }
 
             if !client_guards.clients.is_empty() {
