@@ -1,6 +1,12 @@
 # Log Analyzer
 
 A high-performance, self-contained log monitoring engine built with **Rust** and **WebAssembly**. It features real-time file tailing, a multi-threaded ETL pipeline, and a reactive dashboard powered by `uPlot`.
+### Design Decisions
+
+* **Linear-Time Parsing:** Log lines are processed in a single pass using a streaming `BufReader`, ensuring O(n) complexity.
+* **WASM-Side Aggregation:** Instead of sending massive JSON blobs, the backend sends structured `LogUpdate` packets. The WASM client performs the final time-binning into the `BTreeMap`, offloading UI computation from the main JS thread.
+* **Non-Blocking I/O:** The use of `mpsc` (Multi-Producer Single-Consumer) channels ensures the file-tailing thread never waits for the WebSocket or Web Server to catch up.
+
 
 ---
 ![screen-capture1-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/7fbaed5a-5ed7-4ea0-8cf4-12e00fa69b35)
