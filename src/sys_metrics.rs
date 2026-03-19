@@ -31,12 +31,7 @@ pub fn get_metrics(etl_socket_clients: SharedLogState) {
         if metric_clients.metric_cache.len() > 500 {
             metric_clients.metric_cache.pop_front();
         }
-        if !metric_clients.clients.is_empty() {
-            println!(
-                "📡 Sending metric to {} clients",
-                metric_clients.clients.len()
-            );
-        }
+
         let msg_bytes: tungstenite::Utf8Bytes = msg.into();
         metric_clients
             .clients

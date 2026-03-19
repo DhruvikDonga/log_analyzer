@@ -17,6 +17,47 @@
                 <h2
                     class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 px-2"
                 >
+                    System Resources (CPU & RAM %)
+                </h2>
+                <div
+                    id="metric-container"
+                    class="w-full flex justify-center bg-gray-950 rounded-lg overflow-hidden"
+                ></div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div
+                    class="bg-gray-900 border border-gray-800 p-4 rounded-xl flex justify-between items-center"
+                >
+                    <span class="text-gray-400 text-sm uppercase font-semibold"
+                        >Current CPU</span
+                    >
+                    <span
+                        id="cpu-current"
+                        class="text-4xl font-mono font-bold text-blue-400"
+                        >0.0%</span
+                    >
+                </div>
+                <div
+                    class="bg-gray-900 border border-gray-800 p-4 rounded-xl flex justify-between items-center"
+                >
+                    <span
+                        class="text-gray-400 text-sm uppercase font-semibold text-red-900"
+                        >Current RAM</span
+                    >
+                    <span
+                        id="ram-current"
+                        class="text-4xl font-mono font-bold text-green-400"
+                        >0.0%</span
+                    >
+                </div>
+            </div>
+
+            <div
+                class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-2xl"
+            >
+                <h2
+                    class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 px-2"
+                >
                     Log Traffic Volume (Minute-by-Minute)
                 </h2>
                 <div

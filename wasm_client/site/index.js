@@ -5,21 +5,15 @@ async function run() {
   await init();
   start_log_stream();
 
-  // uPlot state
-  const chartData = [[], [], []];
-
-  const opts = {
+  // --- 1. Log Traffic Chart ---
+  const logOpts = {
     title: "Log Traffic",
-    width: 800,
-    height: 300,
+    width: 600,
+    height: 250,
     scales: { x: { time: false } },
     series: [
       {},
-      {
-        label: "Total Logs",
-        stroke: "#6366f1",
-        width: 2,
-      },
+      { label: "Total Logs", stroke: "#6366f1", width: 2 },
       {
         label: "Errors",
         stroke: "#ef4444",
@@ -28,54 +22,53 @@ async function run() {
       },
     ],
     axes: [
-      {
-        stroke: "#9ca3af",
-        grid: {
-          stroke: "#374151",
-          width: 1,
-        },
-      },
-      {
-        stroke: "#9ca3af",
-        grid: {
-          stroke: "#374151",
-          width: 1,
-        },
-      },
+      { stroke: "#9ca3af", grid: { stroke: "#374151" } },
+      { stroke: "#9ca3af", grid: { stroke: "#374151" } },
     ],
+  };
+
+  const logUplot = new uPlot(
+    logOpts,
+    [[], [], []],
+    document.getElementById("chart-container"),
+  );
+
+  // --- 2. System Metrics Chart (CPU & RAM) ---
+  const metricOpts = {
+    title: "System Performance (%)",
+    width: 600,
+    height: 250,
+    scales: {
+      x: { time: false },
+      y: { range: [0, 100] },
+    },
     series: [
       {},
+      { label: "CPU Usage", stroke: "#3b82f6", width: 2 },
+      { label: "RAM Usage", stroke: "#10b981", width: 2 },
+    ],
+    axes: [
+      { stroke: "#9ca3af", grid: { stroke: "#374151" } },
       {
-        label: "Total Logs",
-        stroke: "#6366f1",
-        width: 2,
-      },
-      {
-        label: "Errors",
-        stroke: "#ef4444",
-        width: 2,
-        fill: "rgba(239, 68, 68, 0.1)",
+        stroke: "#9ca3af",
+        grid: { stroke: "#374151" },
+        values: (self, ticks) => ticks.map((t) => t + "%"),
       },
     ],
   };
 
-  const uplot = new uPlot(
-    opts,
-    chartData,
-    document.getElementById("chart-container"),
+  const metricUplot = new uPlot(
+    metricOpts,
+    [[], [], []],
+    document.getElementById("metric-container"),
   );
 
-  window.updateUPlot = (xArr, yTotal, yErrors) => {
-    if (!uplot) {
-      console.error("❌ uPlot instance is missing!");
-      return;
-    }
+  window.updateLogUPlot = (x, yTotal, yErrors) => {
+    logUplot.setData([x, yTotal, yErrors]);
+  };
 
-    try {
-      uplot.setData([xArr, yTotal, yErrors]);
-    } catch (e) {
-      console.error("❌ uPlot Draw Error:", e);
-    }
+  window.updateMetricUPlot = (x, cpu, ram) => {
+    metricUplot.setData([x, cpu, ram]);
   };
 }
 
