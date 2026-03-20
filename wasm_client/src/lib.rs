@@ -28,10 +28,10 @@ extern "C" {
     pub fn alert(s: &str);
 
     #[wasm_bindgen(js_name = updateLogUPlot)]
-    fn update_log_uplot(x: JsValue, y_total: JsValue, y_errors: JsValue);
+    fn update_log_uplot(x: JsValue, y_total: JsValue, y_errors: JsValue, timestamps: JsValue);
 
     #[wasm_bindgen(js_name = updateMetricUPlot)]
-    fn update_metric_uplot(x: JsValue, y_total: JsValue, y_errors: JsValue);
+    fn update_metric_uplot(x: JsValue, y_total: JsValue, y_errors: JsValue, timestamps: JsValue);
 }
 
 #[wasm_bindgen]
@@ -44,8 +44,8 @@ pub fn greet_analyzer(name: &str) {
 pub fn start_log_stream() {
     spawn_local(async {
         let mut ws = WebSocket::open("ws://127.0.0.1:9001").expect("Websocket failed to connect");
-        let mut log_bucket_counts: BTreeMap<i32, u32> = BTreeMap::new();
-        let mut log_error_counts: BTreeMap<i32, u32> = BTreeMap::new();
+        let mut log_bucket_counts: BTreeMap<String, u32> = BTreeMap::new();
+        let mut log_error_counts: BTreeMap<String, u32> = BTreeMap::new();
 
         let mut metric_timestamps: VecDeque<String> = VecDeque::with_capacity(500);
         let mut cpu_history: VecDeque<f64> = VecDeque::with_capacity(500);
@@ -55,32 +55,43 @@ pub fn start_log_stream() {
                 Ok(Message::Text(text)) => {
                     if let Ok(log) = serde_json::from_str::<LogUpdate>(&text) {
                         render_log_to_dom(&log);
-                        if let Some(minute_str) = log.time.split(':').last() {
-                            if let Ok(m) = minute_str.parse::<i32>() {
-                                *log_bucket_counts.entry(m).or_insert(0) += 1;
 
-                                if log.error {
-                                    *log_error_counts.entry(m).or_insert(0) += 1;
-                                }
+                        let full_ts = log.time.clone();
+                        let mut minute_ts = full_ts.clone();
+                        if minute_ts.len() >= 8 {
+                            minute_ts.replace_range(6..8, "00");
+                        }
 
-                                let x_axis: Vec<i32> = log_bucket_counts.keys().cloned().collect();
-                                let y_total: Vec<u32> =
-                                    log_bucket_counts.values().cloned().collect();
-                                let y_errors: Vec<u32> = x_axis
-                                    .iter()
-                                    .map(|m| *log_error_counts.get(m).unwrap_or(&0))
-                                    .collect();
+                        *log_bucket_counts.entry(minute_ts.clone()).or_insert(0) += 1;
+                        if log.error {
+                            *log_error_counts.entry(minute_ts.clone()).or_insert(0) += 1;
+                        }
 
-                                update_log_uplot(
-                                    serde_wasm_bindgen::to_value(&x_axis).unwrap(),
-                                    serde_wasm_bindgen::to_value(&y_total).unwrap(),
-                                    serde_wasm_bindgen::to_value(&y_errors).unwrap(),
-                                );
-                                TimeoutFuture::new(500).await;
-
-                                update_log_text_counters(&log_bucket_counts, &log_error_counts);
+                        if log_bucket_counts.len() > 500 {
+                            if let Some(first_key) = log_bucket_counts.keys().next().cloned() {
+                                log_bucket_counts.remove(&first_key);
+                                log_error_counts.remove(&first_key);
                             }
                         }
+
+                        let sorted_timestamps: Vec<String> =
+                            log_bucket_counts.keys().cloned().collect();
+                        let y_total: Vec<u32> = log_bucket_counts.values().cloned().collect();
+
+                        let y_errors: Vec<u32> = sorted_timestamps
+                            .iter()
+                            .map(|ts| *log_error_counts.get(ts).unwrap_or(&0))
+                            .collect();
+
+                        let x_axis: Vec<usize> = (0..sorted_timestamps.len()).collect();
+                        update_log_uplot(
+                            serde_wasm_bindgen::to_value(&x_axis).unwrap(),
+                            serde_wasm_bindgen::to_value(&y_total).unwrap(),
+                            serde_wasm_bindgen::to_value(&y_errors).unwrap(),
+                            serde_wasm_bindgen::to_value(&sorted_timestamps).unwrap(),
+                        );
+
+                        update_log_text_counters(&log_bucket_counts, &log_error_counts);
                     }
                     if let Ok(metric) = serde_json::from_str::<MetricUpdate>(&text) {
                         let ram_pct = if metric.ram_total > 0 {
@@ -99,23 +110,17 @@ pub fn start_log_stream() {
                         ram_history.push_back(ram_pct);
 
                         let x_axis: Vec<usize> = (0..metric_timestamps.len()).collect();
-                        let y_cpu: Vec<f64> = cpu_history.iter().cloned().collect();
-                        let y_ram: Vec<f64> = ram_history.iter().cloned().collect();
 
                         update_metric_uplot(
                             serde_wasm_bindgen::to_value(&x_axis).unwrap(),
-                            serde_wasm_bindgen::to_value(&y_cpu).unwrap(),
-                            serde_wasm_bindgen::to_value(&y_ram).unwrap(),
+                            serde_wasm_bindgen::to_value(&cpu_history).unwrap(),
+                            serde_wasm_bindgen::to_value(&ram_history).unwrap(),
+                            serde_wasm_bindgen::to_value(&metric_timestamps).unwrap(),
                         );
 
                         update_metric_text_labels(metric.cpu_usage, ram_pct);
-                        TimeoutFuture::new(500).await;
-
-                        web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&format!(
-                            "Metric: {:?}",
-                            metric
-                        )));
                     }
+                    TimeoutFuture::new(500).await;
                 }
                 Err(e) => {
                     web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&format!(
@@ -155,7 +160,7 @@ fn render_log_to_dom(log: &LogUpdate) {
     }
 }
 
-fn update_log_text_counters(total_map: &BTreeMap<i32, u32>, error_map: &BTreeMap<i32, u32>) {
+fn update_log_text_counters(total_map: &BTreeMap<String, u32>, error_map: &BTreeMap<String, u32>) {
     let document = web_sys::window().unwrap().document().unwrap();
 
     if let Some(el) = document.get_element_by_id("total-logs") {

@@ -1,3 +1,4 @@
+use chrono::{DateTime, FixedOffset, Utc};
 use std::{
     sync::{Arc, Mutex, mpsc},
     thread,
@@ -55,4 +56,13 @@ impl ThreadPool {
         let job = Box::new(f);
         self.sender.send(job).unwrap();
     }
+}
+
+pub fn get_ist_time(dt: Option<DateTime<Utc>>) -> String {
+    let target_dt = dt.unwrap_or_else(Utc::now);
+    let offset = FixedOffset::east_opt(0).unwrap();
+    target_dt
+        .with_timezone(&offset)
+        .format("%H:%M:%S")
+        .to_string()
 }

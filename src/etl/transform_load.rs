@@ -3,6 +3,7 @@ use crate::{
         LogEvent,
         parser::{LogConfig, parsed_with_dynamic_format},
     },
+    helper::get_ist_time,
     socket::SharedLogState,
 };
 
@@ -55,7 +56,7 @@ fn analyze_groups(
                 .push(raw_line);
 
             //stream to ui
-            let bucket_time = dt.format("%H:%M").to_string();
+            let bucket_time = get_ist_time(Some(dt));
             let msg = serde_json::json!({
                 "time": bucket_time,
                 "file": event.file.to_string(),
@@ -72,7 +73,9 @@ fn analyze_groups(
             if !client_guards.clients.is_empty() {
                 println!("📡 Sending log to {} clients", client_guards.clients.len());
             }
+
             let msg_bytes: tungstenite::Utf8Bytes = msg.into();
+
             client_guards
                 .clients
                 .retain_mut(|ws| ws.send(Message::Text(msg_bytes.clone())).is_ok())

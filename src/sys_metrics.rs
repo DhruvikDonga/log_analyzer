@@ -1,6 +1,7 @@
 use crate::socket::SharedLogState;
 use sysinfo::{CpuRefreshKind, MemoryRefreshKind, RefreshKind, System};
 
+use crate::helper::get_ist_time;
 use serde_json;
 use std::thread;
 use std::time::Duration;
@@ -16,7 +17,7 @@ pub fn get_metrics(etl_socket_clients: SharedLogState) {
     loop {
         sys.refresh_cpu();
         sys.refresh_memory();
-        let bucket_time = chrono::Local::now().format("%H:%M").to_string();
+        let bucket_time = get_ist_time(None);
 
         let msg = serde_json::json!({
             "cpu_usage": sys.global_cpu_info().cpu_usage(),

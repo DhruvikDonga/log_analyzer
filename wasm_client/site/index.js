@@ -5,9 +5,12 @@ async function run() {
   await init();
   start_log_stream();
 
+  let logTimestamps = [];
+  let metricTimestamps = [];
+
   // --- 1. Log Traffic Chart ---
   const logOpts = {
-    title: "Log Traffic",
+    title: "Log Traffic (IST)",
     width: 600,
     height: 250,
     scales: { x: { time: false } },
@@ -22,7 +25,12 @@ async function run() {
       },
     ],
     axes: [
-      { stroke: "#9ca3af", grid: { stroke: "#374151" } },
+      {
+        stroke: "#9ca3af",
+        grid: { stroke: "#374151" },
+        // Map the index (0,1,2...) to the actual HH:mm:ss string
+        values: (self, ticks) => ticks.map((idx) => logTimestamps[idx] || ""),
+      },
       { stroke: "#9ca3af", grid: { stroke: "#374151" } },
     ],
   };
@@ -38,17 +46,20 @@ async function run() {
     title: "System Performance (%)",
     width: 600,
     height: 250,
-    scales: {
-      x: { time: false },
-      y: { range: [0, 100] },
-    },
+    scales: { x: { time: false }, y: { range: [0, 100] } },
     series: [
       {},
       { label: "CPU Usage", stroke: "#3b82f6", width: 2 },
       { label: "RAM Usage", stroke: "#10b981", width: 2 },
     ],
     axes: [
-      { stroke: "#9ca3af", grid: { stroke: "#374151" } },
+      {
+        stroke: "#9ca3af",
+        grid: { stroke: "#374151" },
+        // Map the index to the actual HH:mm:ss string
+        values: (self, ticks) =>
+          ticks.map((idx) => metricTimestamps[idx] || ""),
+      },
       {
         stroke: "#9ca3af",
         grid: { stroke: "#374151" },
@@ -63,11 +74,13 @@ async function run() {
     document.getElementById("metric-container"),
   );
 
-  window.updateLogUPlot = (x, yTotal, yErrors) => {
+  window.updateLogUPlot = (x, yTotal, yErrors, timestamps) => {
+    logTimestamps = timestamps;
     logUplot.setData([x, yTotal, yErrors]);
   };
 
-  window.updateMetricUPlot = (x, cpu, ram) => {
+  window.updateMetricUPlot = (x, cpu, ram, timestamps) => {
+    metricTimestamps = timestamps;
     metricUplot.setData([x, cpu, ram]);
   };
 }

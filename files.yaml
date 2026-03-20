@@ -1,3 +1,4 @@
 files:
   - "/home/dhruvik/log_analyzer/example_logs/access.log"
   - "/home/dhruvik/log_analyzer/example_logs/service.log"
+  - "/var/lib/docker/containers/c881c6451a4e5fdb2f17e60829bf309bcd14ee4e25c48bafac32c2b847660b0c/c881c6451a4e5fdb2f17e60829bf309bcd14ee4e25c48bafac32c2b847660b0c-json.log"
