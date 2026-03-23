@@ -3,13 +3,15 @@
 A high-performance, self-contained log monitoring engine built with **Rust** and **WebAssembly**. It features real-time file tailing, a multi-threaded ETL pipeline, and a reactive dashboard powered by `uPlot`.
 ### Design Decisions
 
-* **Linear-Time Parsing:** Log lines are processed in a single pass using a streaming `BufReader`, ensuring O(n) complexity.
-* **WASM-Side Aggregation:** Instead of sending massive JSON blobs, the backend sends structured `LogUpdate` packets. The WASM client performs the final time-binning into the `BTreeMap`, offloading UI computation from the main JS thread.
-* **Non-Blocking I/O:** The use of `mpsc` (Multi-Producer Single-Consumer) channels ensures the file-tailing thread never waits for the WebSocket or Web Server to catch up.
+* **Actor-Based Broadcaster:** To eliminate lock contention, the system uses a Central Hub Pattern. Independent threads for Logs and Metrics "fire and forget" data into an mpsc channel. A dedicated Broadcaster thread owns the WebSocket pool, ensuring one service never blocks another.
+* **Non-Blocking History Replay:** New clients receive a 500-item "Replay Cache" (Logs and Metrics) upon connection. This catch-up happens in a decoupled task, allowing the live stream to remain jitter-free for existing users.
+* **Linear-Time Parsing:** Log lines are processed in a single pass using a streaming BufReader, ensuring $O(n)$ complexity.
+* **WASM-Side Aggregation:** The backend sends lean LogUpdate and MetricUpdate packets. The WASM client performs final time-binning into a BTreeMap, offloading UI computation from the main JS thread.
 
 
 ---
-![screen-capture1-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/7fbaed5a-5ed7-4ea0-8cf4-12e00fa69b35)
+![screen-capture3-ezgif com-speed](https://github.com/user-attachments/assets/16792276-3d81-44fe-9b59-2ccf299e60e5)
+
 
 ## 🏗️ Build Instructions
 
@@ -89,11 +91,15 @@ files:
 | WebSocket | ws://127.0.0.1:9001/     | Real-time structured log stream |
 
 ## Internal Architecture
-The system utilizes three primary parallel execution units:
+The system utilizes four primary parallel execution units:
 
-- ETL Thread: Watches files using the notify crate. It parses strings into LogUpdate objects and flags errors based on your indicators.
-- Web Server: A custom multi-threaded TcpListener that serves embedded WASM, HTML, and JS assets using RustEmbed.
-- Socket Server: Manages active WebSocket connections and maintains a 500-log "Replay Cache" for new dashboard sessions.
+| Unit    | Technology | Description |
+| -------- | ------- | ------------- |
+| ETL Worker| ``notify`` + ``mpsc`` | Watches files parses strings into structured JSON, and flags errors. |
+| Metrics Worker | ``sysinfo`` | Real-time structured log stream |
+| Hub Broadcaster | ``mpsc`` | The "Post Office" that manages history caches and WebSocket broadcasting. |
+| Web Server | ``rust_embed`` | Custom multi-threaded server delivering assets directly from RAM. |
+| WASM client | ``gloo-net`` + ``serde`` | A high-performance subscriber that deserializes binary streams and manages client-side time-binning. |
 
 ## Features
 - Zero-I/O UI: Assets are served from RAM for maximum speed.
