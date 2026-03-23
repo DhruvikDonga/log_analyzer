@@ -11,14 +11,10 @@ pub struct LogEvent {
     file: Arc<str>,
     line: String,
 }
-use crate::socket::SharedLogState;
+use crate::socket::HubMsg;
+use std::sync::mpsc::Sender;
 
-pub fn etl(
-    path: &str,
-    config: Arc<LogConfig>,
-    file_paths: Vec<String>,
-    etl_socket_clients: SharedLogState,
-) {
+pub fn etl(path: &str, config: Arc<LogConfig>, file_paths: Vec<String>, etl_tx: Sender<HubMsg>) {
     let (rx, handles) = extract(path, file_paths);
-    transform_load(rx, &config, handles, etl_socket_clients);
+    transform_load(rx, &config, handles, etl_tx);
 }

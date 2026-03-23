@@ -4,10 +4,12 @@ use crate::{
         parser::{LogConfig, parsed_with_dynamic_format},
     },
     helper::get_ist_time,
-    socket::SharedLogState,
+    socket::HubMsg,
 };
 
 use chrono::{DateTime, Timelike, Utc};
+use serde_json;
+use std::sync::mpsc::Sender;
 use std::{
     collections::HashMap,
     sync::{
@@ -16,28 +18,21 @@ use std::{
     },
     thread::JoinHandle,
 };
-use tungstenite::Message;
-
-use serde_json;
 
 pub fn transform_load(
     rx: mpsc::Receiver<LogEvent>,
     config: &Arc<LogConfig>,
     handles: Vec<JoinHandle<()>>,
-    etl_socket_clients: SharedLogState,
+    etl_tx: Sender<HubMsg>,
 ) {
-    analyze_groups(rx, config, etl_socket_clients);
+    analyze_groups(rx, config, etl_tx);
 
     for handle in handles {
         handle.join().expect("A thread panicked during execution");
     }
 }
 
-fn analyze_groups(
-    rx: mpsc::Receiver<LogEvent>,
-    config: &Arc<LogConfig>,
-    etl_socket_clients: SharedLogState,
-) {
+fn analyze_groups(rx: mpsc::Receiver<LogEvent>, config: &Arc<LogConfig>, etl_tx: Sender<HubMsg>) {
     let mut grouped_logs: HashMap<DateTime<Utc>, HashMap<String, Vec<String>>> = HashMap::new();
     let lower_indicators: Vec<String> = config
         .error_indicators
@@ -55,50 +50,21 @@ fn analyze_groups(
                 .or_default()
                 .push(raw_line);
 
-            //stream to ui
+            // 2. Prepare JSON
             let bucket_time = get_ist_time(Some(dt));
+            let is_error = lower_indicators
+                .iter()
+                .any(|ind| event.line.to_lowercase().contains(ind));
+
             let msg = serde_json::json!({
                 "time": bucket_time,
                 "file": event.file.to_string(),
                 "line": event.line,
-                "error": lower_indicators.iter().any(|ind| event.line.to_lowercase().contains(ind))
+                "error": is_error
             })
             .to_string();
-            let mut client_guards = etl_socket_clients.lock().unwrap();
-            client_guards.log_cache.push_back(msg.clone());
-            if client_guards.log_cache.len() > 500 {
-                client_guards.log_cache.pop_front();
-            }
 
-            if !client_guards.clients.is_empty() {
-                println!("📡 Sending log to {} clients", client_guards.clients.len());
-            }
-
-            let msg_bytes: tungstenite::Utf8Bytes = msg.into();
-
-            client_guards
-                .clients
-                .retain_mut(|ws| ws.send(Message::Text(msg_bytes.clone())).is_ok())
-        }
-    }
-
-    for (minute, file_logs) in &grouped_logs {
-        for (file_name, logs) in file_logs {
-            let error_count = logs
-                .iter()
-                .filter(|line| {
-                    let line_lower = line.to_lowercase();
-                    lower_indicators.iter().any(|ind| line_lower.contains(ind))
-                })
-                .count();
-
-            println!(
-                "Minute: {} | File: {} | Total Logs: {} | Errors: {} ",
-                minute.format("%H:%M"),
-                file_name,
-                logs.len(),
-                error_count,
-            );
+            let _ = etl_tx.send(HubMsg::LogData(msg));
         }
     }
 }

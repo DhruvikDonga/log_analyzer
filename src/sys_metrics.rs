@@ -1,18 +1,18 @@
-use crate::socket::SharedLogState;
+use crate::socket::HubMsg;
 use sysinfo::{CpuRefreshKind, MemoryRefreshKind, RefreshKind, System};
 
 use crate::helper::get_ist_time;
+use std::sync::mpsc::Sender;
 use std::thread;
-use std::time::Duration;
-use tungstenite::Message;
 
-pub fn get_metrics(etl_socket_clients: SharedLogState) {
+pub fn get_metrics(metric_tx: Sender<HubMsg>) {
     println!("Starting metrics collection");
     let mut sys = System::new_with_specifics(
         RefreshKind::new()
             .with_cpu(CpuRefreshKind::everything())
             .with_memory(MemoryRefreshKind::everything()),
     );
+
     loop {
         sys.refresh_cpu();
         sys.refresh_memory();
@@ -26,17 +26,8 @@ pub fn get_metrics(etl_socket_clients: SharedLogState) {
         })
         .to_string();
 
-        let mut metric_clients = etl_socket_clients.lock().unwrap();
-        metric_clients.metric_cache.push_back(msg.clone());
-        if metric_clients.metric_cache.len() > 500 {
-            metric_clients.metric_cache.pop_front();
-        }
+        let _ = metric_tx.send(HubMsg::MetricData(msg));
 
-        let msg_bytes: tungstenite::Utf8Bytes = msg.into();
-        metric_clients
-            .clients
-            .retain_mut(|ws| ws.send(Message::Text(msg_bytes.clone())).is_ok());
-
-        thread::sleep(Duration::from_secs(2));
+        thread::sleep(std::time::Duration::from_secs(1));
     }
 }
