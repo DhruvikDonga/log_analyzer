@@ -1,6 +1,5 @@
 use clap::Parser;
 use serde::Deserialize;
-use serde_yml;
 use std::{fs, net::TcpListener, sync::Arc, thread};
 mod etl;
 use etl::{etl, parser::LogConfig};

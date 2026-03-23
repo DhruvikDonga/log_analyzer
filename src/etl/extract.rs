@@ -20,7 +20,7 @@ pub fn extract(
 
     let mut handles: Vec<JoinHandle<()>> = Vec::new();
 
-    if dir_path.len() > 0 {
+    if !dir_path.is_empty() {
         for entry in fs::read_dir(dir_path).unwrap() {
             let entry = entry.unwrap();
             if entry.path().is_file() {
@@ -46,11 +46,11 @@ pub fn extract(
     }
     drop(tx);
 
-    return (rx, handles);
+    (rx, handles)
 }
 
 fn tail_logs(file_path: Arc<str>, tx_clone: mpsc::SyncSender<LogEvent>) {
-    print!("Processing file: {} \n", file_path);
+    println!("Processing file: {}", file_path);
     let path = std::path::Path::new(&*file_path);
     let mut file = File::open(path).expect("Error in opening the file");
     let mut reader = std::io::BufReader::new(file);
@@ -82,53 +82,46 @@ fn tail_logs(file_path: Arc<str>, tx_clone: mpsc::SyncSender<LogEvent>) {
         .watch(path, RecursiveMode::NonRecursive)
         .expect("Watch failed");
 
-    for res in event_rx {
-        match res {
-            Ok(event) => {
-                let mut should_read = event.kind.is_modify();
-                if event.kind.is_remove() || event.kind.is_modify() {
-                    if let Ok(meta) = std::fs::metadata(&path) {
-                        let current_pos = reader.stream_position().unwrap_or(0);
-                        if meta.len() < current_pos {
-                            file =
-                                File::open(path).expect("Error in re-opening the truncated file");
-                            reader = std::io::BufReader::new(file);
-                            should_read = true;
-                        }
-                    } else {
-                        //file was removed or does not exist
-                        // do not read from it
-                        //try to open it again
-                        thread::sleep(std::time::Duration::from_millis(100));
-                        if let Ok(f) = File::open(&path) {
-                            file = f;
-                            reader = std::io::BufReader::new(file);
-                            should_read = true;
-                        }
-                    }
+    for event in event_rx.into_iter().flatten() {
+        let mut should_read = event.kind.is_modify();
+        if event.kind.is_remove() || event.kind.is_modify() {
+            if let Ok(meta) = std::fs::metadata(path) {
+                let current_pos = reader.stream_position().unwrap_or(0);
+                if meta.len() < current_pos {
+                    file = File::open(path).expect("Error in re-opening the truncated file");
+                    reader = std::io::BufReader::new(file);
+                    should_read = true;
                 }
-                if should_read {
-                    while let Ok(bytes) = reader.read_line(&mut line) {
-                        if bytes == 0 {
-                            break;
-                        }
-                        let trimmed = line.trim();
-                        if trimmed.is_empty() {
-                            line.clear();
-                            continue;
-                        }
-                        let log_event = LogEvent {
-                            file: file_path.clone(),
-                            line: line.trim().to_string(),
-                        };
-
-                        tx_clone.send(log_event).ok();
-                        line.clear();
-                    }
+            } else {
+                //file was removed or does not exist
+                // do not read from it
+                //try to open it again
+                thread::sleep(std::time::Duration::from_millis(100));
+                if let Ok(f) = File::open(path) {
+                    file = f;
+                    reader = std::io::BufReader::new(file);
+                    should_read = true;
                 }
             }
+        }
+        if should_read {
+            while let Ok(bytes) = reader.read_line(&mut line) {
+                if bytes == 0 {
+                    break;
+                }
+                let trimmed = line.trim();
+                if trimmed.is_empty() {
+                    line.clear();
+                    continue;
+                }
+                let log_event = LogEvent {
+                    file: file_path.clone(),
+                    line: line.trim().to_string(),
+                };
 
-            _ => {}
+                tx_clone.send(log_event).ok();
+                line.clear();
+            }
         }
     }
 }

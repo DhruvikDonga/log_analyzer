@@ -10,26 +10,69 @@
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-black text-gray-100 font-sans min-h-screen">
-        <div class="max-w-6xl mx-auto p-6 space-y-6">
-            <div
-                class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-2xl"
-            >
-                <h2
-                    class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 px-2"
-                >
-                    Log Traffic Volume (Minute-by-Minute)
-                </h2>
+        <div class="max-w-8xl mx-auto p-6 space-y-6">
+            <div class="flex flex-col lg:flex-row gap-6">
                 <div
-                    id="chart-container"
-                    class="w-full flex justify-center bg-gray-950 rounded-lg overflow-hidden"
-                ></div>
+                    class="flex-1 bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-2xl"
+                >
+                    <h2
+                        class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4 px-2"
+                    >
+                        System Resources (CPU & RAM %)
+                    </h2>
+                    <div
+                        id="metric-container"
+                        class="w-full bg-gray-950 rounded-lg overflow-hidden flex justify-center"
+                    ></div>
+                </div>
+
+                <div
+                    class="flex-1 bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-2xl"
+                >
+                    <h2
+                        class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4 px-2"
+                    >
+                        Log Traffic Volume (Real-time)
+                    </h2>
+                    <div
+                        id="chart-container"
+                        class="w-full bg-gray-950 rounded-lg overflow-hidden flex justify-center"
+                    ></div>
+                </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div
-                    class="bg-gray-900 border border-gray-800 p-4 rounded-xl flex justify-between items-center"
+                    class="bg-gray-900 border border-gray-800 p-4 rounded-xl flex flex-col items-center shadow-lg"
                 >
-                    <span class="text-gray-400 text-sm uppercase font-semibold"
+                    <span
+                        class="text-gray-500 text-[10px] uppercase font-bold mb-1"
+                        >CPU Usage</span
+                    >
+                    <span
+                        id="cpu-current"
+                        class="text-2xl font-mono font-bold text-blue-400"
+                        >0.0%</span
+                    >
+                </div>
+                <div
+                    class="bg-gray-900 border border-gray-800 p-4 rounded-xl flex flex-col items-center shadow-lg"
+                >
+                    <span
+                        class="text-gray-500 text-[10px] uppercase font-bold mb-1"
+                        >RAM Usage</span
+                    >
+                    <span
+                        id="ram-current"
+                        class="text-2xl font-mono font-bold text-green-400"
+                        >0.0%</span
+                    >
+                </div>
+                <div
+                    class="bg-gray-900 border border-gray-800 p-4 rounded-xl flex flex-col items-center shadow-lg"
+                >
+                    <span
+                        class="text-gray-500 text-[10px] uppercase font-bold mb-1"
                         >Total Logs</span
                     >
                     <span
@@ -39,10 +82,10 @@
                     >
                 </div>
                 <div
-                    class="bg-gray-900 border border-gray-800 p-4 rounded-xl flex justify-between items-center"
+                    class="bg-gray-900 border border-gray-800 p-4 rounded-xl flex flex-col items-center shadow-lg"
                 >
                     <span
-                        class="text-gray-400 text-sm uppercase font-semibold text-red-900"
+                        class="text-gray-500 text-[10px] uppercase font-bold mb-1"
                         >Anomalies</span
                     >
                     <span
@@ -71,10 +114,9 @@
                         >
                     </div>
                 </div>
-
                 <div
                     id="log-container"
-                    class="h-80 overflow-y-auto bg-black/40 p-4 font-mono text-sm space-y-1 scroll-smooth"
+                    class="h-64 overflow-y-auto bg-black/40 p-4 font-mono text-sm space-y-1 scroll-smooth"
                 >
                     <div class="text-gray-700 italic">
                         Waiting for log synchronization...

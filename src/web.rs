@@ -26,7 +26,7 @@ pub fn handle_connection(mut stream: TcpStream) {
     };
 
     if let Some(file) = Asset::get(path) {
-        let content_type = match path.split('.').last() {
+        let content_type = match path.split('.').next_back() {
             Some("js") => "application/javascript",
             Some("wasm") => "application/wasm",
             Some("css") => "text/css",

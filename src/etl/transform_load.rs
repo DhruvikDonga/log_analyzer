@@ -46,13 +46,13 @@ fn analyze_groups(
         .collect();
 
     while let Ok(event) = rx.recv() {
-        if let Some((dt, raw_line)) = parsed_with_dynamic_format(&event.line, &config) {
+        if let Some((dt, raw_line)) = parsed_with_dynamic_format(&event.line, config) {
             let bucket = dt.with_second(0).unwrap().with_nanosecond(0).unwrap();
             grouped_logs
                 .entry(bucket)
-                .or_insert_with(HashMap::new)
+                .or_default()
                 .entry(event.file.to_string())
-                .or_insert_with(Vec::new)
+                .or_default()
                 .push(raw_line);
 
             //stream to ui

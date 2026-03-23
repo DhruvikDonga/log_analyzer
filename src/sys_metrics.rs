@@ -2,7 +2,6 @@ use crate::socket::SharedLogState;
 use sysinfo::{CpuRefreshKind, MemoryRefreshKind, RefreshKind, System};
 
 use crate::helper::get_ist_time;
-use serde_json;
 use std::thread;
 use std::time::Duration;
 use tungstenite::Message;
