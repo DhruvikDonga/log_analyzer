@@ -53,8 +53,6 @@ pub fn start_log_stream() {
         while let Some(msg) = ws.next().await {
             match msg {
                 Ok(Message::Text(text)) => {
-                    web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&format!("{}", text)));
-
                     if let Ok(log) = serde_json::from_str::<LogUpdate>(&text) {
                         render_log_to_dom(&log);
 
